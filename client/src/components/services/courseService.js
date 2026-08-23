@@ -1,4 +1,4 @@
-import api from "../Utility/api";
+import api from "../../Utility/api";
 
 export const fetchCourse = async (courseId) => {
   const response = await api.get(`/courses/${courseId}`);
