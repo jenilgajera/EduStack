@@ -27,7 +27,7 @@ connectDB();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://edustack.vercel.app", "http://localhost:5173", "http://localhost:4000"],
+    origin: ["https://edustack.vercel.app", "https://edu-stack-5o751oxdz-jenilgajeras-projects.vercel.app", "http://localhost:5173", "http://localhost:4000"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -38,7 +38,7 @@ const io = new Server(server, {
 app.use(express.json());
 // Enable CORS with credentials for cross-origin requests
 app.use(cors({
-  origin: ["https://edustack.vercel.app", "http://localhost:5173", "http://localhost:4000"],
+  origin: ["https://edustack.vercel.app", "https://edu-stack-5o751oxdz-jenilgajeras-projects.vercel.app", "http://localhost:5173", "http://localhost:4000"],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
