@@ -22,12 +22,31 @@ const Course = require("./models/Course");
 const Student = require("./models/Student");
 const Message = require("./models/Message"); // Add this
 
-connectDB();
+// On Vercel serverless, wrap DB connect so a failure returns a proper
+// 503 JSON (with CORS headers) instead of crashing the function and
+// triggering a browser "CORS error".
+let dbReady = false;
+let dbError = null;
+
+connectDB()
+  .then(() => { dbReady = true; })
+  .catch((err) => { dbError = err; });
+
+// Middleware: gate every request on DB readiness
+app.use((req, res, next) => {
+  if (dbError) {
+    return res.status(503).json({
+      status: false,
+      message: 'Database unavailable. Contact support.',
+    });
+  }
+  next();
+});
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://edustack.vercel.app", "https://edu-stack-5o751oxdz-jenilgajeras-projects.vercel.app", "http://localhost:5173", "http://localhost:4000"],
+    origin: ["https://edu-stack-rust.vercel.app", "https://edustack.vercel.app", "https://edu-stack-5o751oxdz-jenilgajeras-projects.vercel.app", "http://localhost:5173", "http://localhost:4000"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -38,7 +57,7 @@ const io = new Server(server, {
 app.use(express.json());
 // Enable CORS with credentials for cross-origin requests
 app.use(cors({
-  origin: ["https://edustack.vercel.app", "https://edu-stack-5o751oxdz-jenilgajeras-projects.vercel.app", "http://localhost:5173", "http://localhost:4000"],
+  origin: ["https://edu-stack-rust.vercel.app", "https://edustack.vercel.app", "https://edu-stack-5o751oxdz-jenilgajeras-projects.vercel.app", "http://localhost:5173", "http://localhost:4000"],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
