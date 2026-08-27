@@ -23,16 +23,14 @@ function Login() {
       if (response.data.status === true) {
           toast.success('Login successful!', { icon: '👏' });
           setUser({ role: response.data.userType, email });
+          const dashboard = email === "admin@example.com"
+            ? "/admin-dashboard"
+            : response.data.userType === "instructor"
+              ? "/instructor-dashboard"
+              : "/student-dashboard";
           setTimeout(() => {
-            if (email === "admin@example.com") {
-              window.location.replace("/admin-dashboard");
-            } else {
-              const dashboard = response.data.userType === "instructor"
-                ? "/instructor-dashboard"
-                : "/student-dashboard";
-              window.location.replace(dashboard);
-            }
-          }, 200);
+            window.location.href = dashboard;
+          }, 500);
       } else {
         toast.error(response.data.message || "Login failed");
       }
