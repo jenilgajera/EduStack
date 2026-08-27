@@ -22,16 +22,17 @@ function Login() {
       const response = await api.post("/auth/login", payload);
       if (response.data.status === true) {
           toast('Login successful!', { icon: '👏', style: { borderRadius: '10px', background: '#333', color: '#fff' } });
-          // Set user directly in context from login response — no extra API call needed
           setUser({ role: response.data.userType, email });
-          if (email === "admin@example.com") {
-            navigate("/admin-dashboard");
-          } else {
-            const dashboard = response.data.userType === "instructor"
-              ? "/instructor-dashboard"
-              : "/student-dashboard";
-            navigate(dashboard);
-          }
+          setTimeout(() => {
+            if (email === "admin@example.com") {
+              window.location.href = "/admin-dashboard";
+            } else {
+              const dashboard = response.data.userType === "instructor"
+                ? "/instructor-dashboard"
+                : "/student-dashboard";
+              window.location.href = dashboard;
+            }
+          }, 100);
       } else {
         toast.error(response.data.message || "Login failed");
       }
