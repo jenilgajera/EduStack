@@ -21,18 +21,18 @@ function Login() {
     try {
       const response = await api.post("/auth/login", payload);
       if (response.data.status === true) {
-          toast('Login successful!', { icon: '👏', style: { borderRadius: '10px', background: '#333', color: '#fff' } });
+          toast.success('Login successful!', { icon: '👏' });
           setUser({ role: response.data.userType, email });
           setTimeout(() => {
             if (email === "admin@example.com") {
-              window.location.href = "/admin-dashboard";
+              window.location.replace("/admin-dashboard");
             } else {
               const dashboard = response.data.userType === "instructor"
                 ? "/instructor-dashboard"
                 : "/student-dashboard";
-              window.location.href = dashboard;
+              window.location.replace(dashboard);
             }
-          }, 100);
+          }, 200);
       } else {
         toast.error(response.data.message || "Login failed");
       }
