@@ -23,14 +23,12 @@ function Login() {
       if (response.data.status === true) {
           toast.success('Login successful!', { icon: '👏' });
           setUser({ role: response.data.userType, email });
-          const dashboard = email === "admin@example.com"
-            ? "/admin-dashboard"
-            : response.data.userType === "instructor"
-              ? "/instructor-dashboard"
+          const dashboard = response.data.userType === "instructor"
+            ? "/instructor-dashboard"
+            : response.data.userType === "admin"
+              ? "/admin-dashboard"
               : "/student-dashboard";
-          setTimeout(() => {
-            window.location.href = dashboard;
-          }, 500);
+          window.location.href = dashboard;
       } else {
         toast.error(response.data.message || "Login failed");
       }

@@ -5,12 +5,14 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(undefined);
-  const loginSetRef = useRef(false); // track if login already set the user
+  const loginSetRef = useRef(false);
+  const isLoggingIn = useRef(false);
 
   useEffect(() => {
+    if (isLoggingIn.current) return;
+
     api.get("/auth/user")
       .then((res) => {
-        // Only set from API if login hasn't already set the user
         if (!loginSetRef.current) {
           setUser(res.data.user || null);
         }
@@ -23,13 +25,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const setUserFromLogin = (userData) => {
+    isLoggingIn.current = true;
     loginSetRef.current = true;
     setUser(userData);
+    setTimeout(() => { isLoggingIn.current = false; }, 1000);
   };
 
   const logout = async () => {
     try { await api.post("/auth/logout"); } catch (_) {}
     loginSetRef.current = false;
+    isLoggingIn.current = false;
     setUser(null);
   };
 
